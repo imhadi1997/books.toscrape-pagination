@@ -8,7 +8,6 @@ class PaginationSpiderSpider(scrapy.Spider):
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
     }
 
-    category_name = ""
 
     def start_requests(self):
         yield scrapy.Request(url="https://books.toscrape.com/index.html", callback=self.parse)
@@ -17,7 +16,6 @@ class PaginationSpiderSpider(scrapy.Spider):
         categories_url = response.xpath('//ul[@class="nav nav-list"]/li/ul/li/a/@href').getall()
         for i in categories_url:
             making_url = "https://books.toscrape.com/"+str(i)
-            self.category_name = str(i)
             yield scrapy.Request(
                 url=making_url, callback=self.category_page, headers=self.headers
             )    
@@ -26,9 +24,7 @@ class PaginationSpiderSpider(scrapy.Spider):
         all_books_in_category = response.xpath('//li[@class="col-xs-6 col-sm-4 col-md-3 col-lg-3"]')
         
         for books in all_books_in_category:
-            spliting_cat = self.category_name.split('/')
-            aftersplit = (spliting_cat[3]).split("_")
-            split_after_split = aftersplit[0]
+            category_name = books.xpath('//div[@class="page-header action"]/h1/text()').get()
             booke_name = books.xpath('.//article[@class="product_pod"]/h3/a/text()').get()
             book_price = books.xpath('.//div[@class="product_price"]/p[@class="price_color"]/text()').get()
             rating = (books.xpath('.//p[contains(@class,"star-rating")]/@class').get() or '').split()[-1].strip()
@@ -45,7 +41,7 @@ class PaginationSpiderSpider(scrapy.Spider):
 
 
             yield {
-                    'Category' : split_after_split,
+                    'Category' : category_name,
                     'Book name' : booke_name,
                     'Book Price' : price_amount,
                     'Currency' : currency,
