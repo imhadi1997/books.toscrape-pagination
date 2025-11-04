@@ -79,11 +79,21 @@ class BooksSpiderSpider(scrapy.Spider):
 
         match_price = re.match(r'([^\d]+)([\d.]+)', book_price)
         if match_price:
-            currency = match_price.group(1).strip()
+            currency = "gbp"                            #"match_price.group(1).strip()"
             price_amount = float(match_price.group(2))
         else:
             currency = None
             price_amount = None
+
+        rating_map = {
+            "One": 1,
+            "Two": 2,
+            "Three": 3,
+            "Four": 4,
+            "Five": 5
+        }
+
+        book_rating_int = rating_map.get(book_rating, 0)
 
         yield {
             'Category Name' : category_name,
@@ -91,6 +101,6 @@ class BooksSpiderSpider(scrapy.Spider):
             'Price' : price_amount,
             'Currency' : currency,
             'in Stock' : available_number,
-            'Rating' : book_rating,
+            'Rating' : book_rating_int,
             'URL of Book' : book_url
         }
