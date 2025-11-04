@@ -41,7 +41,7 @@ class BooksSpiderSpider(scrapy.Spider):
                 #all_books_of_a_category = book.xpath('.//article[@class="product_pod"]/h3/a/text()').get()
                 url_of_selected_book = book.xpath('.//article[@class="product_pod"]/h3/a/@href').get()
                 spliting_href = str(url_of_selected_book).split("/")
-                making_url_of_book = str(self.main_url)+"//catalogue/"+str(spliting_href[-2])+"/"+str(spliting_href[-1])    #   after split() variable, used indexing to get exactly what i need to make a URL of book
+                making_url_of_book = str(self.main_url)+"catalogue/"+str(spliting_href[-2])+"/"+str(spliting_href[-1])    #   after split() variable, used indexing to get exactly what i need to make a URL of book
                 
                 yield scrapy.Request(
                     url=making_url_of_book,
