@@ -46,7 +46,7 @@ class BooksSpiderSpider(scrapy.Spider):
                 yield scrapy.Request(
                     url=making_url_of_book,
                     callback=self.extarcting_data_of_book,
-                    cb_kwargs={'category_name': category_name, 'book_url' : url_of_selected_book},
+                    cb_kwargs={'category_name': category_name, 'book_url' : making_url_of_book},
                     headers=self.headers
                 )
                 
